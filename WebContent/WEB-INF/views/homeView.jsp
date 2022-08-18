@@ -10,5 +10,9 @@
 	<jsp:include page="_header.jsp"></jsp:include>
 	<jsp:include page="_menu.jsp"></jsp:include>
 	<h3>Home page!</h3>
+	<p id="demo"></p>
 </body>
+<script>
+	document.getElementById("demo").innerHTML = new Date();
+</script>
 </html>

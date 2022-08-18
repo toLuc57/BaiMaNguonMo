@@ -10,6 +10,8 @@ import java.util.List;
 import BarberStore.beans.CaLamViec;
 import BarberStore.beans.DichVu;
 import BarberStore.beans.KhungGio;
+import BarberStore.beans.NhanVien;
+import BarberStore.beans.Tiem;
 import BarberStore.jdbc.MySQLConnUtils;
 
 public class OrderUtils {
@@ -163,6 +165,65 @@ public class OrderUtils {
             	String ghiChu = rs.getString("ghi_chu");
             	
             	DichVu caLamViec = new DichVu(idNhanVien, ten, gia, ghiChu);
+            	list.add(caLamViec);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	public static List<Tiem> QueryTiem() {
+		Connection conn = null;
+		List<Tiem> list = new ArrayList<Tiem>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select *from tiem");
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String id = rs.getString("tiem_id");
+            	String ten = rs.getString("ten_tiem");
+            	String dienThoai = rs.getString("dien_thoai");
+            	String duong = rs.getString("ten_duong");
+            	String phuong = rs.getString("phuong");
+            	String quan = rs.getString("quan");
+            	
+            	Tiem caLamViec = new Tiem(id, ten, dienThoai, duong, phuong, quan);
+            	list.add(caLamViec);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	
+	public static List<NhanVien> QueryNhanVien(String idTiem) {
+		Connection conn = null;
+		List<NhanVien> list = new ArrayList<NhanVien>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select *from nhan_vien where tiem_id = ?");
+            pstm.setInt(1, Integer.parseInt(idTiem));
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String idNhanVien = rs.getString("nhan_vien_id");
+            	String hoTen = rs.getString("ho_ten");
+            	String dienThoai = rs.getString("dien_thoai");
+            	String cmnd = rs.getString("CMND");
+            	String trangThai = rs.getString("trang_thai");
+            	String idTiemHang = rs.getString("tiem_id");
+            	String idTruongCa = rs.getString("truong_ca_id");
+            	
+            	NhanVien caLamViec = new NhanVien(idNhanVien, hoTen, dienThoai, cmnd, trangThai, idTiemHang, idTruongCa);
             	list.add(caLamViec);
             }
             conn.close();

@@ -1,7 +1,6 @@
 package BarberStore.servlet.displays;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import BarberStore.beans.DichVu;
+import BarberStore.beans.NhanVien;
+import BarberStore.beans.Tiem;
 import BarberStore.utils.OrderUtils;
 
 @WebServlet("/order")
@@ -27,6 +28,12 @@ public class OrderServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<DichVu> dsdv = OrderUtils.QueryDichVu();
 		request.setAttribute("dsdv", dsdv);
+		List<Tiem> dst = OrderUtils.QueryTiem();
+		request.setAttribute("dst", dst);
+		for(Tiem tiem : dst) {
+			List<NhanVien> dsnvtt = OrderUtils.QueryNhanVien(tiem.getId());
+			request.setAttribute("dsnvtt"+ tiem.getId(), dsnvtt);
+		}
 		RequestDispatcher dispatcher = this.getServletContext().
 				getRequestDispatcher("/WEB-INF/views/OrderView.jsp");
 		dispatcher.forward(request, response);

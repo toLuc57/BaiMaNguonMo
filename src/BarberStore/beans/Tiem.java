@@ -4,12 +4,18 @@ public class Tiem {
 	private String id;
 	private String ten;
 	private String dienThoai;
-	private String diaChi;
+	private String tenDuong;
+	private String phuong;
+	private String quan;
 	
-	public Tiem(String ten, String dienThoai, String diaChi) {
+	public Tiem(String id, String ten, String dienThoai, String tenDuong, 
+			String phuong, String quan) {
+		this.id = id;
 		this.ten = ten;
 		this.dienThoai = dienThoai;
-		this.diaChi = diaChi;
+		this.tenDuong = tenDuong;
+		this.phuong = phuong;
+		this.quan = quan;
 	}
 
 	public String getId() {
@@ -36,11 +42,27 @@ public class Tiem {
 		this.ten = ten;
 	}
 
-	public String getDiaChi() {
-		return diaChi;
+	public String getTenDuong() {
+		return tenDuong;
 	}
 
-	public void setDiaChi(String diaChi) {
-		this.diaChi = diaChi;
+	public void setTenDuong(String tenDuong) {
+		this.tenDuong = tenDuong;
+	}
+
+	public String getPhuong() {
+		return phuong;
+	}
+
+	public void setPhuong(String phuong) {
+		this.phuong = phuong;
+	}
+
+	public String getQuan() {
+		return quan;
+	}
+
+	public void setQuan(String quan) {
+		this.quan = quan;
 	}
 }

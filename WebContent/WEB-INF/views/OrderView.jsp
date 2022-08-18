@@ -17,15 +17,16 @@
       
       <form method="POST" action="${pageContext.request.contextPath}/order">
          <input type="hidden" name="idKhachHang" value="${khachHang.id}"> 
+         <input type="hidden" value="${dst}">
          <table border="0">
          	<tr>
          		<td>CHI NHÁNH</td>
          		<td>
-         			<input type="search" name="findStore"/>
          			<select name="store">
-         				<option value="Quận 5">Quận 5</option>
-         				<option value="Quận 2">Quận 2</option>
-         				<option value="Quận 1">Quận 1</option>
+         				<c:forEach items="${dsq}" var="i">
+         					<input type="hidden" name="">
+         					<option value="${i.quan}">${i.quan}</option>
+         				</c:forEach>
          			</select>
          		</td>
          	</tr>
@@ -33,12 +34,18 @@
                <td>DỊCH VỤ</td>
                <td>
                  <c:forEach items="${dsdv}" var="i">
-                   <input type="checkbox" name="list" id="${i.id}" value="${i.ten}">
+                   <input type="checkbox" name="dsdv" 
+                   id="${i.id}" value="${i.ten}">
                    <label for="${i.id}">${i.ten} - </label> 
-                   <label for="${i.id}">${i.gia}k</label> 
+                   <label class="price" for="${i.id}">${i.gia}</label> 
+                   <label for="${i.id}">nghìn đồng</label> 
                    <br/>
                  </c:forEach>
                </td>
+            </tr>
+            <tr>
+            	<td> Tổng số tiền (nghìn đồng): </td>
+            	<td><p id="output">0 nghìn đồng</p></td> 
             </tr>
             <tr>
                <td>NHÂN VIÊN</td>
@@ -67,5 +74,23 @@
             </tr>
          </table>
       </form>	
+<script>
+const ingredients = document.querySelectorAll('input[type=checkbox]');
+const price = document.getElementsByClassName('price');
+
+for(let i = 0; i < ingredients.length; ++i){
+	ingredients[i].addEventListener('click', updateDisplay);
+}
+function updateDisplay() {
+	let total = 0;
+	for(let i = 0; i < ingredients.length; ++i) {
+	  if (ingredients[i].checked) {
+	    total -= -price[i].innerHTML;
+	  }
+	}
+	document.getElementById("output").innerHTML = total + " nghìn đồng";
+}
+
+</script>
 </body>
 </html>
