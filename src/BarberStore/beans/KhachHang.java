@@ -6,10 +6,11 @@ public class KhachHang {
 	private String dienThoai;
 	private String matKhau;
 	
-	public KhachHang(String ten, String dienThoai, String matKhau) {
-		this.setTen(ten);
-		this.setDienThoai(dienThoai);
-		this.setMatKhau(matKhau);
+	public KhachHang(String id, String ten, String dienThoai, String matKhau) {
+		this.id = id;
+		this.ten = ten;
+		this.dienThoai = dienThoai;
+		this.matKhau = matKhau;
 	}
 
 	public String getId() {

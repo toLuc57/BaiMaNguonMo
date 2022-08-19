@@ -4,59 +4,64 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 
 import BarberStore.beans.KhachHang;
 import BarberStore.jdbc.MySQLConnUtils;
 
 public class UserUtils {
 	
-	public static boolean QueryKhachHang(String sdt, String matKhau) {
+	public static KhachHang QueryKhachHang(String dienThoai, String matKhau) {
 		Connection conn = null;
 		try {
 			conn = MySQLConnUtils.getMySQLConUtils();
 			
             PreparedStatement pstm = conn.prepareStatement("select *from khach_hang where sdt=?");
+            pstm.setString(1,dienThoai);
             ResultSet rs = pstm.executeQuery();
             if(rs.next()) {
-            	return true;
+            	PreparedStatement pstm1 = conn.prepareStatement("select *from khach_hang "
+        		 		+ "where dien_thoai=? and mat_khau=?");
+        		 pstm1.setString(1,dienThoai);
+        		 pstm1.setString(2,matKhau);
+        		 ResultSet rs1 = pstm.executeQuery();
+        		 if(rs1.next()) {
+        			 String id = rs.getString("khach_hang_id");
+        			 String ten = rs.getString("ho_ten");
+        			 String sdt = rs.getString("dien_thoai");
+        			 String mk = rs.getString("mat_khau");
+        			 
+        			 KhachHang kh = new KhachHang(id,ten,sdt, mk);
+        			 return kh;
+        		 }
+        		 return null;
             }
             else {
-            	if(matKhau == null)
+            	if(matKhau == null)	{
+            		// default value
+            		matKhau = "123456";
+            	}
             	try {
-        			conn = MySQLConnUtils.getMySQLConUtils();
-        			String sql = "insert into " + table 
-        					+ " (" + id + ", " + name + ", " 
-        					+ theoryLesson + ", " + practiceLesson + ")"
-        					+ " values (?,?,?,?)" ;
+        			String sql = "insert into khach_hang "
+        					+ " (dien_thoai, mat_khau)"
+        					+ " values (?,?)" ;
         			
-        			PreparedStatement pstm = conn.prepareStatement(sql);
-        			String newID = getNewID();
-        			pstm.setString(1,newID);
-        			pstm.setString(2, insertRow.getName());
-        			pstm.setInt(3, insertRow.getNumberOfTheoryLesson());
-        			pstm.setInt(4, insertRow.getNumberOfPracticeLesson());
-        			
-        			pstm.executeUpdate();
-        			listID.add(newID);
+        			PreparedStatement pstm1 = conn.prepareStatement(sql);
+        			pstm1.setString(1,dienThoai);
+        			pstm1.setString(2,matKhau);
+        			pstm1.executeUpdate();
         		}
-        		catch(ClassNotFoundException | SQLException e) {
-        			MySQLConnUtils.closeQuietly(conn); 
+        		catch(SQLException e) {
+        			MySQLConnUtils.rollbackQuietly(conn); 
         			e.printStackTrace();
         		}
-        		finally {
-        			MySQLConnUtils.closeQuietly(conn); 
-        		}
+            	return new KhachHang("","User",dienThoai, matKhau);
             }
-            conn.close();
         } catch (ClassNotFoundException | SQLException e) {
         	e.printStackTrace();
         }
 		finally {
 			MySQLConnUtils.closeQuietly(conn);
 		}
-		return false;
+		return null;
 	}
 }

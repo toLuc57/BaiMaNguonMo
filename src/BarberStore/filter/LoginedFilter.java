@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import BarberStore.beans.KhachHang;
 import BarberStore.utils.MyUtils;
+import BarberStore.utils.UserUtils;
 
 @WebFilter(filterName="LoginedFilter", urlPatterns= {"/*"})
 public class LoginedFilter implements Filter {
@@ -26,15 +27,37 @@ public class LoginedFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			throws IOException, ServletException {
+		System.out.println("LoginedFilter");
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		KhachHang loginedUser = MyUtils.getLoginedUser(req.getSession());
 		if(loginedUser == null) {
 			//System.out.println(req.getRequestURI());
 			if(!req.getRequestURI().equals("/BarberStore/")) {
+				MyUtils.setRequiredLogin(false);
 				resp.sendRedirect(req.getContextPath() + "/");
 				return;
 			}
+			else {
+				String sdt = request.getParameter("phone");
+				String mk = request.getParameter("password");
+				System.out.println(sdt + " " + mk);
+				if((sdt == null && mk == null) || 
+						(sdt.length() == 0 && mk.length() == 0)) {
+					chain.doFilter(request, response);
+					return;
+				}
+				else {
+					KhachHang kh = UserUtils.QueryKhachHang(sdt, mk);
+					if(kh == null) {
+						request.setAttribute("loiDangNhap",);
+					}
+					MyUtils.storeLoginedUser(req.getSession(), kh);
+				}
+			}
+		}
+		else {
+			request.setAttribute("loginedUser", loginedUser);
 		}
 		chain.doFilter(request, response);
 	}

@@ -105,14 +105,14 @@ ul.topnav li.right {float: right;}
   <span class="close">&times;</span>
   <div class="modal-content" id="modalLogin">
     <p style="font-size: 20px; text-align:center;">Đăng nhập</p>
-    <form method="POST" action="${pageContext.request.contextPath}/home">
+    <form method="POST" action="${pageContext.request.contextPath}/">
       <table>
         <tr>
-          <td style="margin:7px"> Số điện thoại: </td>
+          <td style="margin:7px;"> Số điện thoại: </td>
           <td> <input type="tel" name="phone"> </td>
         </tr>
         <tr>
-          <td style="margin:7px"> Mật khẩu (nếu có): </td>
+          <td style="margin:7px;"> Mật khẩu (nếu có): </td>
           <td> <input type="password" name="password"> </td>
         </tr>
         <tr>
