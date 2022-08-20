@@ -1,7 +1,6 @@
 package BarberStore.servlet.displays;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,38 +43,40 @@ public class OrderServlet extends HttpServlet {
 		Map<String, List<NhanVien>> dscnvtct = new HashMap<String, List<NhanVien>>();
 		// Neu ko co chon nhan vien - mac dinh la tat ca nv
 		// K: tiem - V: danh sach cac ca lam viec cua tat ca nhan vien trong tiem K
-		Map<String,
-List<CaLamViec>> dscclvct = new HashMap<String, List<CaLamViec>>();
-		
-		
+		Map<String, List<CaLamViec>> dscclvct = new HashMap<String, List<CaLamViec>>();
 		// K: nhan vien - V: danh sach cac ca lam viec cua nhan vien K
 		Map<String, List<CaLamViec>> dscclvccnv = new HashMap<String, List<CaLamViec>>();
 		
 		for(String chiNhanh : dscn) {
 			List<Tiem> dstccn = OrderUtils.QueryTiem(chiNhanh);
-			request.setAttribute("dstccn" + dscn.indexOf(chiNhanh), dstccn);
+			//request.setAttribute("dstccn" + dscn.indexOf(chiNhanh), dstccn);
 			dsccn.put("dstccn" + dscn.indexOf(chiNhanh),dstccn);
 			for(Tiem tiem : dstccn) {
 				// Neu ko co chon nhan vien - mac dinh la tat ca nv
 				List<CaLamViec> dsclvtt = OrderUtils.QueryCaLamViecTrongTiem(tiem.getId());
-				request.setAttribute("dsclvtt"+ dstccn.indexOf(tiem), dsclvtt);
-				dscclvct.put("dsclvtt"+ dstccn.indexOf(tiem), dsclvtt);
-				List<KhungGio> dskgtt = OrderUtils.QueryKhungGioTrong(dsclvtt);
-				request.setAttribute("dskgtt"+ dstccn.indexOf(tiem), dskgtt);
+				//request.setAttribute("dsclvtt"+ tiem.getId(), dsclvtt);
+				dscclvct.put("dsclvtt"+ tiem.getId(), dsclvtt);
+//				List<KhungGio> dskgtt = OrderUtils.QueryKhungGioTrong(dsclvtt);
+//				request.setAttribute("dskgtt"+ dstccn.indexOf(tiem), dskgtt);
 				
-				
+				//Cac ca lam viec cua nhan vien
 				List<NhanVien> dsnvtt = OrderUtils.QueryNhanVien(tiem.getId());
-				request.setAttribute("dsnvtt"+ dstccn.indexOf(tiem), dsnvtt);
-				dscnvtct.put("dscnvtct" + dstccn.indexOf(tiem) ,dsnvtt);
+				//request.setAttribute("dsnvtt"+ tiem.getId(), dsnvtt);
+				dscnvtct.put("dsnvtt" + tiem.getId(), dsnvtt);
 				for(NhanVien nv :dsnvtt) {
 					List<CaLamViec> dsclvcnv = OrderUtils.QueryCaLamViecCuaNhanVien(nv.getId());
-					request.setAttribute("dsclvcnv" + dsnvtt.indexOf(nv), dsclvcnv);
-					List<KhungGio> dskgcnv = OrderUtils.QueryKhungGioTrong(dsclvcnv);
-					request.setAttribute("dskgcnv"+ dsnvtt.indexOf(nv), dskgcnv);
+					//request.setAttribute("dsclvcnv" + nv.getId(), dsclvcnv);
+					dscclvccnv.put("dsclvcnv" + nv.getId(), dsclvcnv);
+//					List<KhungGio> dskgcnv = OrderUtils.QueryKhungGioTrong(dsclvcnv);
+//					request.setAttribute("dskgcnv"+ dsnvtt.indexOf(nv), dskgcnv);
 				}
 			}
 		}
 		request.setAttribute("dsccn", dsccn);
+		request.setAttribute("dscnvtct", dscnvtct);
+		request.setAttribute("dscclvct", dscclvct);
+		request.setAttribute("dscclvccnv", dscclvccnv);
+		
 		RequestDispatcher dispatcher = this.getServletContext().
 				getRequestDispatcher("/WEB-INF/views/OrderView.jsp");
 		dispatcher.forward(request, response);

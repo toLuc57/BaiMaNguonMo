@@ -65,4 +65,16 @@ public class Tiem {
 	public void setQuan(String quan) {
 		this.quan = quan;
 	}
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+            return true;
+        }
+		if (!(o instanceof Tiem)) {
+            return false;
+        }
+        Tiem t = (Tiem) o;
+        return id == t.id;
+    }
+	
 }

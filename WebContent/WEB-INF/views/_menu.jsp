@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <style>
 ul.topnav {
+  clear: both;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -80,7 +81,7 @@ ul.topnav li.right {float: right;}
 </style>
 
 <ul class="topnav">
-  <li class="">
+  <li>
     <a href="${pageContext.request.contextPath}/">Trang chủ</a>	
   </li>
   <c:if test="${not empty loginedUser}">

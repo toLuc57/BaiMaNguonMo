@@ -135,8 +135,8 @@ public class OrderUtils {
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
             	String id = rs.getString("khung_gio_id");
-            	String batDau = rs.getDate("bat_dau").toString();
-            	String ketThuc = rs.getDate("ket_thuc").toString();
+            	String batDau = rs.getTime("bat_dau").toString();
+            	String ketThuc = rs.getTime("ket_thuc").toString();
             	
             	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
             	list.add(khungGio);
@@ -158,8 +158,8 @@ public class OrderUtils {
 			conn = MySQLConnUtils.getMySQLConUtils();
 			
             PreparedStatement pstm = conn.prepareStatement("select * from ca_lam_viec" + 
-            		" where nhan_vien_id in (select nhan_vien_id from tiem" + 
-            		" where tiem_id = ? and trang_thai = 1) and trang_thai=0");
+            		" where nhan_vien_id in (select nhan_vien_id from nhan_vien" + 
+            		" where tiem_id = ? and trang_thai = 1) and trang_thai= 0");
             pstm.setString(1, idTiem);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
