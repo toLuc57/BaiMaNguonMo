@@ -17,17 +17,29 @@
       
       <form method="POST" action="${pageContext.request.contextPath}/order">
          <input type="hidden" name="idKhachHang" value="${khachHang.id}"> 
-         <input type="hidden" value="${dst}">
          <table border="0">
          	<tr>
          		<td>CHI NHÁNH</td>
          		<td>
-         			<select name="store">
-         				<c:forEach items="${dsq}" var="i">
-         					<input type="hidden" name="">
-         					<option value="${i.quan}">${i.quan}</option>
+         			<select id="branch" name="store" onchange="selectBranch()">
+         				<c:forEach items="${dscn}" var="i">
+         					<option value="${i}">${i}</option>
          				</c:forEach>
          			</select>
+         		</td>
+         	</tr>
+         	<tr>
+         		<td>TIỆM</td>
+         		<td>
+         			<c:forEach items="${dsccn.keySet()}" var="cn">
+         				<div style="display:none;" id="${cn}" >
+         				<c:forEach items="${dsccn.get(cn)}" var="i">
+         					<input type="radio" id="${i.id}" value="${i.ten}" name="store"> 
+         					<label>${i.ten}</label>
+         				</c:forEach>
+         			</div>
+         			</c:forEach>
+         			
          		</td>
          	</tr>
             <tr>
@@ -55,8 +67,14 @@
                    <label>${i}</label>
                    <br/>
                  </c:forEach>
+                 
+                 <c:forEach items="${dsnv}" var="i">
+                   <input type="radio" name="list" value="${i}">
+                   <label>${i}</label>
+                   <br/>
+                 </c:forEach>
                </td>
-            <tr>
+            </tr>
             <tr>
                <td>THỜI GIAN</td>
                <td>
@@ -65,7 +83,14 @@
                    <label>${i}</label>
                    <br/>
                  </c:forEach>
+                 
+                 <c:forEach items="${dskg}" var="i">
+                   <input type="radio" name="list" value="${i}">
+                   <label>${i}</label>
+                   <br/>
+                 </c:forEach>
                </td>
+            </tr>
             <tr>
                <td colspan="2">                   
                    <input type="submit" value="Submit" />
@@ -91,6 +116,17 @@ function updateDisplay() {
 	document.getElementById("output").innerHTML = total + " nghìn đồng";
 }
 
+function selectBranch(){
+	var branchs = document.getElementById("branch");
+	var currentBranch = branchs.value;
+	for(let i = 0; i < branchs.length; ++i){
+		if(currentBranch == branchs[i].value){
+			document.getElementById("dstccn"+i).style.display = "block";
+		} else {
+			document.getElementById("dstccn"+i).style.display = "none";
+		}
+	}
+}
 </script>
 </body>
 </html>

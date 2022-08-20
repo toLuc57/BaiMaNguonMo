@@ -15,141 +15,6 @@ import BarberStore.beans.Tiem;
 import BarberStore.jdbc.MySQLConnUtils;
 
 public class OrderUtils {
-	private static final String QUERY_KHUNG_GIO_TRONG = "select * from khung_gio"
-			+ " where khung_gio_id in (select khung_gio_id from ca_lam_viec"
-			+ " where trang_thai = 0)";
-	private static final String QUERY_CA_LAM = "select * from ca_lam_viec"
-			+ " where trang_thai = 0";
-	
-	public static List<KhungGio> QueryKhungGioTrong() {
-		Connection conn = null;
-		List<KhungGio> danhSachKhungGioTrong = new ArrayList<KhungGio>();
-		try {
-			conn = MySQLConnUtils.getMySQLConUtils();
-			
-            PreparedStatement pstm = conn.prepareStatement(QUERY_KHUNG_GIO_TRONG);
-            ResultSet rs = pstm.executeQuery();
-            while(rs.next()) {
-            	String id = rs.getString("khung_gio_id");
-            	String batDau = rs.getDate("bat_dau").toString();
-            	String ketThuc = rs.getDate("ket_thuc").toString();
-            	
-            	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
-            	danhSachKhungGioTrong.add(khungGio);
-            }
-            conn.close();
-        } catch (ClassNotFoundException | SQLException e) {
-        	e.printStackTrace();
-        }
-		finally {
-			MySQLConnUtils.closeQuietly(conn);
-		}
-		return danhSachKhungGioTrong;
-	}
-	public static List<KhungGio> QueryKhungGioTrong(List<String> idCuaHang) {
-		if(idCuaHang.size() == 0) {
-			return QueryKhungGioTrong();
-		}
-		Connection conn = null;
-		List<KhungGio> danhSachKhungGioTrong = new ArrayList<KhungGio>();
-		try {
-			conn = MySQLConnUtils.getMySQLConUtils();
-			
-			String queryThemDK ="select nhan_vien_id from nhan_vien"
-					+ " where trang_thai = 1 and store_id in (" + idCuaHang.get(0);
-			for(int i = 1; i < idCuaHang.size(); ++i) {
-				queryThemDK = queryThemDK.concat(", idCuaHang");
-				
-			}
-			queryThemDK = queryThemDK.concat(",)");
-			String query = QUERY_KHUNG_GIO_TRONG + " and nhan_vien_id in (" + queryThemDK + ")";
-			
-            PreparedStatement pstm = conn.prepareStatement(query);
-            ResultSet rs = pstm.executeQuery();
-            while(rs.next()) {
-            	String id = rs.getString("khung_gio_id");
-            	String batDau = rs.getDate("bat_dau").toString();
-            	String ketThuc = rs.getDate("ket_thuc").toString();
-            	
-            	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
-            	danhSachKhungGioTrong.add(khungGio);
-            }
-            conn.close();
-        } catch (ClassNotFoundException | SQLException e) {
-        	e.printStackTrace();
-        }
-		finally {
-			MySQLConnUtils.closeQuietly(conn);
-		}
-		return danhSachKhungGioTrong;
-	}
-	
-	public static List<CaLamViec> QueryCaLamViecTrong() {
-		Connection conn = null;
-		List<CaLamViec> danhSachCaLamTrong = new ArrayList<CaLamViec>();
-		try {
-			conn = MySQLConnUtils.getMySQLConUtils();
-			
-            PreparedStatement pstm = conn.prepareStatement(QUERY_CA_LAM);
-            ResultSet rs = pstm.executeQuery();
-            while(rs.next()) {
-            	String idNhanVien = rs.getString("nhan_vien_id");
-            	String idKhungGio = rs.getString("khung_gio_id");
-            	String batDau = rs.getDate("ngay_lam_viec").toString();
-            	int trangThai = rs.getInt("trang_thai");
-            	
-            	CaLamViec caLamViec = new CaLamViec(idNhanVien,idKhungGio,batDau,trangThai);
-            	danhSachCaLamTrong.add(caLamViec);
-            }
-            conn.close();
-        } catch (ClassNotFoundException | SQLException e) {
-        	e.printStackTrace();
-        }
-		finally {
-			MySQLConnUtils.closeQuietly(conn);
-		}
-		return danhSachCaLamTrong;
-	}
-	
-	public static List<CaLamViec> QueryCaLamViecTrong(List<String> idCuaHang) {
-		if(idCuaHang.size() == 0) {
-			return QueryCaLamViecTrong();
-		}
-		Connection conn = null;
-		List<CaLamViec> danhSachCaLamTrong = new ArrayList<CaLamViec>();
-		try {
-			conn = MySQLConnUtils.getMySQLConUtils();
-			
-			String queryThemDK ="select nhan_vien_id from nhan_vien"
-					+ " where trang_thai = 1 and store_id in (" + idCuaHang.get(0);
-			for(int i = 1; i < idCuaHang.size(); ++i) {
-				queryThemDK = queryThemDK.concat(", idCuaHang");
-				
-			}
-			queryThemDK = queryThemDK.concat(",)");
-			
-			String query = QUERY_CA_LAM + " and nhan_vien_id in (" + queryThemDK + ")";
-            PreparedStatement pstm = conn.prepareStatement(query);
-            ResultSet rs = pstm.executeQuery();
-            while(rs.next()) {
-            	String idNhanVien = rs.getString("nhan_vien_id");
-            	String idKhungGio = rs.getString("khung_gio_id");
-            	String batDau = rs.getDate("ngay_lam_viec").toString();
-            	int trangThai = rs.getInt("trang_thai");
-            	
-            	CaLamViec caLamViec = new CaLamViec(idNhanVien,idKhungGio,batDau,trangThai);
-            	danhSachCaLamTrong.add(caLamViec);
-            }
-            conn.close();
-        } catch (ClassNotFoundException | SQLException e) {
-        	e.printStackTrace();
-        }
-		finally {
-			MySQLConnUtils.closeQuietly(conn);
-		}
-		return danhSachCaLamTrong;
-	}
-	
 	public static List<DichVu> QueryDichVu() {
 		Connection conn = null;
 		List<DichVu> list = new ArrayList<DichVu>();
@@ -176,13 +41,37 @@ public class OrderUtils {
 		}
 		return list;
 	}
-	public static List<Tiem> QueryTiem() {
+	
+	public static List<String> QueryChiNhanh() {
+		Connection conn = null;
+		List<String> list = new ArrayList<String>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select quan from tiem group by quan");
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String quan = rs.getString("quan");
+            	list.add(quan);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	
+	public static List<Tiem> QueryTiem(String chiNhanh) {
 		Connection conn = null;
 		List<Tiem> list = new ArrayList<Tiem>();
 		try {
 			conn = MySQLConnUtils.getMySQLConUtils();
 			
-            PreparedStatement pstm = conn.prepareStatement("select *from tiem");
+            PreparedStatement pstm = conn.prepareStatement("select *from tiem where quan=?");
+            pstm.setString(1, chiNhanh);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
             	String id = rs.getString("tiem_id");
@@ -211,7 +100,7 @@ public class OrderUtils {
 		try {
 			conn = MySQLConnUtils.getMySQLConUtils();
 			
-            PreparedStatement pstm = conn.prepareStatement("select *from nhan_vien where tiem_id = ?");
+            PreparedStatement pstm = conn.prepareStatement("select *from nhan_vien where tiem_id = ? and trang_thai = 1");
             pstm.setInt(1, Integer.parseInt(idTiem));
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
@@ -225,6 +114,128 @@ public class OrderUtils {
             	
             	NhanVien caLamViec = new NhanVien(idNhanVien, hoTen, dienThoai, cmnd, trangThai, idTiemHang, idTruongCa);
             	list.add(caLamViec);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	
+	public static List<KhungGio> QueryKhungGio() {
+		Connection conn = null;
+		List<KhungGio> list = new ArrayList<KhungGio>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select * from khung_gio");
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String id = rs.getString("khung_gio_id");
+            	String batDau = rs.getDate("bat_dau").toString();
+            	String ketThuc = rs.getDate("ket_thuc").toString();
+            	
+            	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
+            	list.add(khungGio);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	
+	public static List<CaLamViec> QueryCaLamViecTrongTiem(String idTiem) {
+		Connection conn = null;
+		List<CaLamViec> list = new ArrayList<CaLamViec>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select * from ca_lam_viec" + 
+            		" where nhan_vien_id in (select nhan_vien_id from tiem" + 
+            		" where tiem_id = ? and trang_thai = 1) and trang_thai=0");
+            pstm.setString(1, idTiem);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String idNhanVien = rs.getString("nhan_vien_id");
+            	String idKhungGio = rs.getString("khung_gio_id");
+            	String batDau = rs.getDate("ngay_lam_viec").toString();
+            	int trangThai = rs.getInt("trang_thai");
+            	
+            	CaLamViec caLamViec = new CaLamViec(idNhanVien,idKhungGio,batDau,trangThai);
+            	list.add(caLamViec);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	
+	public static List<CaLamViec> QueryCaLamViecCuaNhanVien(String idNhanVien) {
+		Connection conn = null;
+		List<CaLamViec> list = new ArrayList<CaLamViec>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select *from ca_lam_viec "
+            		+ "where nhan_vien_id=? and trang_thai=0");
+            pstm.setString(1, idNhanVien);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String idNV = rs.getString("nhan_vien_id");
+            	String idKhungGio = rs.getString("khung_gio_id");
+            	String batDau = rs.getDate("ngay_lam_viec").toString();
+            	int trangThai = rs.getInt("trang_thai");
+            	
+            	CaLamViec caLamViec = new CaLamViec(idNV,idKhungGio,batDau,trangThai);
+            	list.add(caLamViec);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
+	}
+	
+	public static List<KhungGio> QueryKhungGioTrong(List<CaLamViec> dsCaLamViec) {
+		if(dsCaLamViec.isEmpty() || dsCaLamViec.size() ==0) {
+			return null;
+		}
+		Connection conn = null;
+		List<KhungGio> list = new ArrayList<KhungGio>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+			String query ="select * from khung_gio"
+					+ " where khung_gio_id in (" + dsCaLamViec.get(0).getIdKhungGio();
+			for(int i = 1; i < dsCaLamViec.size(); ++i) {
+				query = query.concat(", " +dsCaLamViec.get(i).getIdKhungGio());
+				
+			}
+			query = query.concat(")");
+			
+            PreparedStatement pstm = conn.prepareStatement(query);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String id = rs.getString("khung_gio_id");
+            	String batDau = rs.getDate("bat_dau").toString();
+            	String ketThuc = rs.getDate("ket_thuc").toString();
+            	
+            	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
+            	list.add(khungGio);
             }
             conn.close();
         } catch (ClassNotFoundException | SQLException e) {

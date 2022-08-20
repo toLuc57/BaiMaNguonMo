@@ -27,7 +27,7 @@ public class LoginedFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			throws IOException, ServletException {
-		System.out.println("LoginedFilter");
+		//System.out.println("LoginedFilter");
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		KhachHang loginedUser = MyUtils.getLoginedUser(req.getSession());
@@ -38,19 +38,24 @@ public class LoginedFilter implements Filter {
 				resp.sendRedirect(req.getContextPath() + "/");
 				return;
 			}
+			// req.getRequestURI() == /BarberStore/
 			else {
 				String sdt = request.getParameter("phone");
 				String mk = request.getParameter("password");
 				System.out.println(sdt + " " + mk);
-				if((sdt == null && mk == null) || 
-						(sdt.length() == 0 && mk.length() == 0)) {
+				if(sdt == null || sdt.length() == 0) {
+					MyUtils.deleteLoginedUser(req.getSession());
 					chain.doFilter(request, response);
 					return;
 				}
 				else {
 					KhachHang kh = UserUtils.QueryKhachHang(sdt, mk);
 					if(kh == null) {
-						request.setAttribute("loiDangNhap",);
+						MyUtils.deleteLoginedUser(req.getSession());
+						request.setAttribute("ttdn","Fail");
+					}
+					else {
+						request.setAttribute("ttdn", null);
 					}
 					MyUtils.storeLoginedUser(req.getSession(), kh);
 				}

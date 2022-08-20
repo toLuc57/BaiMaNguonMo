@@ -39,7 +39,7 @@ ul.topnav li.right {float: right;}
 		margin-left:auto;
 		margin-right:auto;
 		width:32%;
-		min-width:150px;
+		min-width:80px;
 		height:200px;
 		background-color: hsl(0, 0%, 100%);
 		border-style: groove;
@@ -83,9 +83,6 @@ ul.topnav li.right {float: right;}
   <li class="">
     <a href="${pageContext.request.contextPath}/">Trang chủ</a>	
   </li>
-  <li>
-    <a href="${pageContext.request.contextPath}/order">Đặt lịch</a> 
-  </li>
   <c:if test="${not empty loginedUser}">
 	  <li>
 	    <a href="${pageContext.request.contextPath}/order">Đặt lịch</a> 
@@ -104,6 +101,7 @@ ul.topnav li.right {float: right;}
 <div id="myModal" class="modal">
   <span class="close">&times;</span>
   <div class="modal-content" id="modalLogin">
+    <input type="hidden" value="${ttdn}" id="ttdn">
     <p style="font-size: 20px; text-align:center;">Đăng nhập</p>
     <form method="POST" action="${pageContext.request.contextPath}/">
       <table>
@@ -126,6 +124,11 @@ ul.topnav li.right {float: right;}
   </div>
 </div>
 <script type="text/javascript">
+var ttdn = document.getElementById('ttdn');
+if(ttdn.value == "Fail"){
+	window.alert("Đăng nhập thất bại");
+}
+	
 var modal= document.getElementById('myModal');
 
 var btnLogin = document.getElementById('btnLogin');
