@@ -34,7 +34,6 @@ public class LoginedFilter implements Filter {
 		if(loginedUser == null) {
 			//System.out.println(req.getRequestURI());
 			if(!req.getRequestURI().equals("/BarberStore/")) {
-				MyUtils.setRequiredLogin(false);
 				resp.sendRedirect(req.getContextPath() + "/");
 				return;
 			}
@@ -42,7 +41,7 @@ public class LoginedFilter implements Filter {
 			else {
 				String sdt = request.getParameter("phone");
 				String mk = request.getParameter("password");
-				System.out.println(sdt + " " + mk);
+				
 				if(sdt == null || sdt.length() == 0) {
 					MyUtils.deleteLoginedUser(req.getSession());
 					chain.doFilter(request, response);

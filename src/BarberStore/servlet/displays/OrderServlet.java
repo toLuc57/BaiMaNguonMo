@@ -83,8 +83,16 @@ public class OrderServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		String idKhachHang = request.getParameter("idKhachHang");
+		String ngayDat = request.getParameter("orderDate");
+		String idTiem = request.getParameter("store");
+		String[] cacDichVu = request.getParameterValues("service");
+		String idNhanVien = request.getParameter("staff");
+		String idKhungGio = request.getParameter("shift");
+		
+		OrderUtils.DatLich(idKhachHang, idNhanVien, idKhungGio, ngayDat, cacDichVu, idTiem);
+		
+		response.sendRedirect(request.getContextPath() + "/account");
 	}
 
 }

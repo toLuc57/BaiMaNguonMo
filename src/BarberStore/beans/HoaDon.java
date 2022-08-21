@@ -5,13 +5,16 @@ public class HoaDon {
 	private String idKhachHang;
 	private String trangThai;
 	private String ngayDat;
+	private String ngayThucHien;
 	private String idNhanVien;
 	
-	private HoaDon(String idKhachHang, String trangThai,
-			String ngayDat, String idNhanVien) {
+	public HoaDon(String id, String idKhachHang, String trangThai,
+			String ngayDat, String ngayThucHien, String idNhanVien) {
+		this.setId(id);
 		this.setIdKhachHang(idKhachHang);
 		this.setTrangThai(trangThai);
 		this.setNgayDat(ngayDat);
+		this.setNgayThucHien(ngayThucHien);
 		this.setIdNhanVien(idNhanVien);
 	}
 
@@ -53,5 +56,13 @@ public class HoaDon {
 
 	public void setIdNhanVien(String idNhanVien) {
 		this.idNhanVien = idNhanVien;
+	}
+
+	public String getNgayThucHien() {
+		return ngayThucHien;
+	}
+
+	public void setNgayThucHien(String ngayThucHien) {
+		this.ngayThucHien = ngayThucHien;
 	}
 }

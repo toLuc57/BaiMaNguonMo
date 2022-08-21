@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import BarberStore.beans.CaLamViec;
 import BarberStore.beans.DichVu;
@@ -14,7 +16,10 @@ import BarberStore.beans.NhanVien;
 import BarberStore.beans.Tiem;
 import BarberStore.jdbc.MySQLConnUtils;
 
-public class OrderUtils {
+public class OrderUtils {	
+	private static Map<String,String> mapGioBatDau = new HashMap<String, String>();
+	private static Map<String,Integer> mapDichVu = new HashMap<String, Integer>();
+	
 	public static List<DichVu> QueryDichVu() {
 		Connection conn = null;
 		List<DichVu> list = new ArrayList<DichVu>();
@@ -24,13 +29,14 @@ public class OrderUtils {
             PreparedStatement pstm = conn.prepareStatement("select *from dich_vu");
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
-            	String idNhanVien = rs.getString("dich_vu_id");
+            	String id = rs.getString("dich_vu_id");
             	String ten = rs.getString("ten_dich_vu");
             	int gia = rs.getInt("gia");
             	String ghiChu = rs.getString("ghi_chu");
             	
-            	DichVu caLamViec = new DichVu(idNhanVien, ten, gia, ghiChu);
+            	DichVu caLamViec = new DichVu(id, ten, gia, ghiChu);
             	list.add(caLamViec);
+            	mapDichVu.put(id,gia);
             }
             conn.close();
         } catch (ClassNotFoundException | SQLException e) {
@@ -135,11 +141,12 @@ public class OrderUtils {
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
             	String id = rs.getString("khung_gio_id");
-            	String batDau = rs.getTime("bat_dau").toString();
-            	String ketThuc = rs.getTime("ket_thuc").toString();
+            	String batDau = rs.getString("bat_dau");
+            	String ketThuc = rs.getString("ket_thuc");
             	
             	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
             	list.add(khungGio);
+            	mapGioBatDau.put(id,batDau);
             }
             conn.close();
         } catch (ClassNotFoundException | SQLException e) {
@@ -245,5 +252,91 @@ public class OrderUtils {
 			MySQLConnUtils.closeQuietly(conn);
 		}
 		return list;
+	}
+	
+	private static void UpdateCaLamViec(String idNhanVien, String idKhungGio, String ngayDat) {
+		Connection conn = null;
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			String update = "update ca_lam_viec "
+					+ " SET trang_thai = 1 "
+					+ " WHERE nhan_vien_id = ? and khung_gio_id = ? "
+					+ " and ngay_lam_viec = ?";
+			PreparedStatement pstm = conn.prepareStatement(update);
+			pstm.setString(1, idNhanVien);
+			pstm.setString(2, idKhungGio);
+			pstm.setString(3, ngayDat);
+			System.out.println("OrderUtils.UpdateCaLamViec:" +pstm.executeUpdate());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private static void InsertChiTietHoaDon(String idKhachHang, String ngayDat,
+			 String idNhanVien,String[] cacDichVu) {
+		Connection conn = null;
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			String query = "SELECT hoa_don_id FROM hoa_don" + 
+					" where khach_hang_id = ? " + 
+					" and ngay_thuc_hien = ? " + 
+					" and nhan_vien_id = ? " + 
+					" and NOT EXISTS (select 1 from chi_tiet_hoa_don " + 
+					"	where hoa_don.hoa_don_id = chi_tiet_hoa_don.hoa_don_id)";
+			PreparedStatement pstm = conn.prepareStatement(query);
+			pstm.setString(1, idKhachHang);
+			pstm.setString(2, ngayDat);
+			pstm.setString(3, idNhanVien);
+			ResultSet rs = pstm.executeQuery();
+			if(rs.next()) {
+				String idHoaDon = rs.getString("hoa_don_id");
+				String insert = "INSERT INTO chi_tiet_hoa_don (hoa_don_id, dich_vu_id, gia_ca)"
+						+ " VALUES (?, ?, ?)";
+				for(int i = 0; i< cacDichVu.length;++i) {
+					String idDichVu = cacDichVu[i];
+					int gia = mapDichVu.get(idDichVu);
+					PreparedStatement pstm1 = conn.prepareStatement(insert);
+					pstm1.setString(1, idHoaDon);
+					pstm1.setString(2, idDichVu);
+					pstm1.setInt(3, gia);	
+					pstm1.executeUpdate();
+				}
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			MySQLConnUtils.rollbackQuietly(conn);
+		} finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+	}
+	
+	private static void InsertHoaDon(String idKhachHang, String ngayDat,
+			String idNhanVien, String[] cacDichVu) {
+		Connection conn = null;
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			String update = "INSERT INTO hoa_don (khach_hang_id, ngay_thuc_hien, nhan_vien_id)"
+					+ " VALUES (?, ?, ?)";
+			PreparedStatement pstm = conn.prepareStatement(update);
+			pstm.setString(1, idKhachHang);
+			pstm.setString(2, ngayDat);
+			pstm.setString(3, idNhanVien);
+			pstm.executeUpdate();
+			OrderUtils.InsertChiTietHoaDon(idKhachHang, ngayDat, idNhanVien,cacDichVu);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			MySQLConnUtils.rollbackQuietly(conn);
+		} finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+	}
+	
+	public static void DatLich(String idKhachHang, String idNhanVien, 
+			String idKhungGio, String ngayDat, String[] cacDichVu, String idTiem) {
+		OrderUtils.UpdateCaLamViec(idNhanVien, idKhungGio, ngayDat);
+		ngayDat = ngayDat + " " + mapGioBatDau.get(idKhungGio);
+		OrderUtils.InsertHoaDon(idKhachHang, ngayDat, idNhanVien, cacDichVu);
 	}
 }

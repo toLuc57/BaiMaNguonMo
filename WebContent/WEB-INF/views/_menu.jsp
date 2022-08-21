@@ -6,7 +6,7 @@ ul.topnav {
   clear: both;
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 5px 0;
   overflow: hidden;
   background-color: #333;
 }
@@ -36,15 +36,16 @@ ul.topnav li.right {float: right;}
 	background-color: hsl(0, 0%, 71%);
 }
 .modal-content{
-		display:block;
-		margin-left:auto;
-		margin-right:auto;
-		width:32%;
-		min-width:80px;
-		height:200px;
-		background-color: hsl(0, 0%, 100%);
-		border-style: groove;
-	}
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	max-width:290px;
+	width:27%;
+	min-width:150px;
+	height:200px;
+	background-color: hsl(0, 0%, 100%);
+	border-style: groove;
+}
 .close{
 	position:absolute;
 	top:15px;
@@ -79,7 +80,6 @@ ul.topnav li.right {float: right;}
   }
 }
 </style>
-
 <ul class="topnav">
   <li>
     <a href="${pageContext.request.contextPath}/">Trang chủ</a>	
@@ -89,7 +89,7 @@ ul.topnav li.right {float: right;}
 	    <a href="${pageContext.request.contextPath}/order">Đặt lịch</a> 
 	  </li>
 	  <li class="right">
-	    <a href="${pageContext.request.contextPath}/">Thông tin cá nhân</a>
+	    <a href="${pageContext.request.contextPath}/account">Thông tin cá nhân</a>
 	  </li>
   </c:if>
   <c:if test="${empty loginedUser}">

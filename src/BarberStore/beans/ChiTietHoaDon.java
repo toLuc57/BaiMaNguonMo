@@ -4,10 +4,10 @@ public class ChiTietHoaDon {
 	private String id;
 	private String idDichVu;
 	private String danhGia;
-	private double gia;
+	private int gia;
 	
 	public ChiTietHoaDon(String id, String idDichVu, 
-			String danhGia, double gia) {
+			String danhGia, int gia) {
 		this.setId(id);
 		this.setIdDichVu(idDichVu);
 		this.setDanhGia(danhGia);
@@ -38,11 +38,11 @@ public class ChiTietHoaDon {
 		this.danhGia = danhGia;
 	}
 
-	public double getGia() {
+	public int getGia() {
 		return gia;
 	}
 
-	public void setGia(double gia) {
+	public void setGia(int gia) {
 		this.gia = gia;
 	}
 }

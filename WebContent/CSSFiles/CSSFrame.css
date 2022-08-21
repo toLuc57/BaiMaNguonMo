@@ -1,0 +1,26 @@
+.frameAcc{
+  clear: both;
+  background-color: #f2f2f2;
+  margin:auto;
+  padding: 10px 15px;
+  border: 2px solid #ccc;
+  border-style: groove;
+  width: 290px;
+  height: auto;
+}
+.frameBill{
+  clear: both;
+  background-color: #f2f2f2;
+  margin:auto;
+  padding: 10px 15px;
+  border: 2px solid #ccc;
+  border-style: groove;
+  width: 70%;
+  height: auto;
+}
+.frameBill table{
+	width: 100%;
+}
+.frameBill td{
+	text-align: center;
+}
