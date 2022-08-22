@@ -335,6 +335,11 @@ public class OrderUtils {
 	
 	public static void DatLich(String idKhachHang, String idNhanVien, 
 			String idKhungGio, String ngayDat, String[] cacDichVu, String idTiem) {
+		System.out.println(idKhachHang);
+		System.out.println(idNhanVien);
+		System.out.println(idKhungGio);
+		System.out.println(ngayDat);
+		
 		OrderUtils.UpdateCaLamViec(idNhanVien, idKhungGio, ngayDat);
 		ngayDat = ngayDat + " " + mapGioBatDau.get(idKhungGio);
 		OrderUtils.InsertHoaDon(idKhachHang, ngayDat, idNhanVien, cacDichVu);

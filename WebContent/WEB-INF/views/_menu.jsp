@@ -39,8 +39,8 @@ ul.topnav li.right {float: right;}
 	display:block;
 	margin-left:auto;
 	margin-right:auto;
-	max-width:290px;
-	width:27%;
+	max-width:350px;
+	width:34%;
 	min-width:150px;
 	height:200px;
 	background-color: hsl(0, 0%, 100%);
@@ -105,7 +105,7 @@ ul.topnav li.right {float: right;}
     <input type="hidden" value="${ttdn}" id="ttdn">
     <p style="font-size: 20px; text-align:center;">Đăng nhập</p>
     <form method="POST" action="${pageContext.request.contextPath}/">
-      <table>
+      <table >
         <tr>
           <td style="margin:7px;"> Số điện thoại: </td>
           <td> <input type="tel" name="phone"> </td>

@@ -86,7 +86,7 @@
                <td> KHUNG GIỜ </td>
                <td>
                  <c:forEach items="${dskg}" var="i">
-                   <div id="shifts${i.id}" class="displayShifts" style="dislay:none;">
+                   <div id="shifts${i.id}" class="displayShifts" style="display:none;">
                      <input type="radio" id="shift${i.id}" 
                      class="shifts" name="shift" value="${i.id}">
                      <label for="shift${i.id}">${i.batDau} - ${i.ketThuc}</label>

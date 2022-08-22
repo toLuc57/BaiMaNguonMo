@@ -45,8 +45,10 @@
 		      <th>Mã Khách Hàng</th>
 		      <th>Mã nhân viên</th>
 		      <th>Ngày đặt</th>
+		      <th>Ngày thực hiện</th>
 		      <th>Trạng thái</th> 
 		      <th>Chi tiết</th>  
+		      <th>Hủy lịch</th>
 		   </tr>
 		   <c:forEach items ="${dshdcht}" var="hoaDon">
 		   	<tr>
@@ -54,8 +56,10 @@
 		   		<td>${hoaDon.idKhachHang}</td>
 		   		<td>${hoaDon.idNhanVien}</td>
 		   		<td>${hoaDon.ngayDat}</td>
+		   		<td>${hoaDon.ngayThucHien}</td>
 		   		<td>${hoaDon.trangThai}</td>
 		   		<td><a href="chitiet?idhh=${hoaDon.id}">Chi Tiết Hóa Đơn</a></td>
+		   		<td><a href="xoa?idhh=${hoaDon.id}">Hủy lịch</a>
 		   	</tr>
 		   </c:forEach>
 		</table>
@@ -69,7 +73,7 @@
 	<c:if test="${not empty dshddht}">
 	<br/>
 	  <form class="frameBill">
-	  	<h2 style="text-align: center;">LỊCH HẸN</h2>
+	  	<h2 style="text-align: center;">LỊCH SỬ HÓA ĐƠN</h2>
     	<table border="1">
 			<tr>
 			  <th>Mã đơn hàng</th>
@@ -92,7 +96,7 @@
 		</table>
 	  </form>
  	</c:if>
-	<c:if test="${empty dshdcht}">
+	<c:if test="${empty dshddht}">
 	  <h3>Bạn chưa có hóa đơn nào trước đây</h3>
 	</c:if>
 </body>

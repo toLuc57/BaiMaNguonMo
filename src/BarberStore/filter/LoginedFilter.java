@@ -1,6 +1,9 @@
 package BarberStore.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -27,17 +30,21 @@ public class LoginedFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			throws IOException, ServletException {
-		//System.out.println("LoginedFilter");
+		
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		KhachHang loginedUser = MyUtils.getLoginedUser(req.getSession());
+		List<String> requiredPages = new ArrayList<String>();
+		requiredPages.add("/BarberStore/xoa");
+		requiredPages.add("/BarberStore/account");
+		requiredPages.add("/BarberStore/order");
+		requiredPages.add("/BarberStore/chitiet");
 		if(loginedUser == null) {
-			//System.out.println(req.getRequestURI());
-			if(!req.getRequestURI().equals("/BarberStore/")) {
+			if(requiredPages.contains(req.getRequestURI())) {
 				resp.sendRedirect(req.getContextPath() + "/");
 				return;
 			}
-			// req.getRequestURI() == /BarberStore/
+			// req.getRequestURI() la cac trang ko yeu cau dang nhap
 			else {
 				String sdt = request.getParameter("phone");
 				String mk = request.getParameter("password");

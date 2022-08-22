@@ -80,7 +80,7 @@ public class UserUtils {
 			PreparedStatement pstm = conn.prepareStatement(query);
             pstm.setString(1,idKhachHang);
             ResultSet rs = pstm.executeQuery();
-            if(rs.next()) {
+            while(rs.next()) {
             	String idHoaDon = rs.getString("hoa_don_id");
             	String idKH = rs.getString("khach_hang_id");
             	String trangThai = rs.getString("trang_thai");
@@ -107,7 +107,7 @@ public class UserUtils {
 			PreparedStatement pstm = conn.prepareStatement(query);
             pstm.setString(1,idKhachHang);
             ResultSet rs = pstm.executeQuery();
-            if(rs.next()) {
+            while(rs.next()) {
             	String idHoaDon = rs.getString("hoa_don_id");
             	String idKH = rs.getString("khach_hang_id");
             	String trangThai = rs.getString("trang_thai");
@@ -134,7 +134,7 @@ public class UserUtils {
 			PreparedStatement pstm = conn.prepareStatement(query);
             pstm.setString(1,idHoaDon);
             ResultSet rs = pstm.executeQuery();
-            if(rs.next()) {
+            while(rs.next()) {
             	String idHH = rs.getString("hoa_don_id");
             	String idDV = rs.getString("dich_vu_id");
             	String danhGia = rs.getString("danh_gia");
@@ -165,6 +165,65 @@ public class UserUtils {
             pstm.setString(3,kh.getMatKhau());
             pstm.setString(4,kh.getId());
             pstm.executeUpdate();
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			MySQLConnUtils.rollbackQuietly(conn);
+		} finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+	}
+	// Chi dung voi HH chua hoan thanh
+	public static void DeleteHoaDon(String idHoaDon) {
+		Connection conn = null;
+		try {
+			// Tim kiem va cap nhat lai trang thai
+			String ngayDat = "";
+			String gioDat = "";
+			String idNhanVien = "";
+			String idKhungGio= "";
+			conn = MySQLConnUtils.getMySQLConUtils();
+			String query1 = "SELECT nhan_vien_id, " + 
+					"DATE(ngay_thuc_hien) as 'chi_ngay', " + 
+					"TIME(ngay_thuc_hien) as 'chi_gio' " + 
+					" FROM hoa_don WHERE hoa_don_id = ?";
+			PreparedStatement pstmQuery1 = conn.prepareStatement(query1);
+			pstmQuery1.setString(1, idHoaDon);
+			ResultSet rs1 = pstmQuery1.executeQuery();
+			if(rs1.next()) {				
+				idNhanVien = rs1.getString("nhan_vien_id");
+				ngayDat = rs1.getString("chi_ngay");
+				gioDat = rs1.getString("chi_gio");
+				
+				String query2 = "SELECT khung_gio_id FROM khung_gio " + 
+						"WHERE bat_dau=?";
+				PreparedStatement pstmQuery2 = conn.prepareStatement(query2);
+				pstmQuery2.setString(1, gioDat);
+				ResultSet rs2 = pstmQuery2.executeQuery();
+				if(rs2.next()) {
+					idKhungGio = rs2.getString("khung_gio_id");
+				}
+				String updateCLV = "UPDATE ca_lam_viec"
+						+ " SET trang_thai = '0'"
+						+ " WHERE nhan_vien_id = ?"
+						+ " and khung_gio_id = ?"
+						+ " and ngay_lam_viec = ?";
+				PreparedStatement pstmUpdate = conn.prepareStatement(updateCLV);
+				pstmUpdate.setString(1, idNhanVien);
+				pstmUpdate.setString(2, idKhungGio);
+				pstmUpdate.setString(3, ngayDat);
+				pstmUpdate.executeUpdate();
+			}
+			String deleteCTHH = "delete from chi_tiet_hoa_don"
+					+ " where hoa_don_id = ?";
+			PreparedStatement pstmDelete1 = conn.prepareStatement(deleteCTHH);
+			pstmDelete1.setString(1, idHoaDon);
+			pstmDelete1.executeUpdate();
+            
+			String deleteHH = "DELETE FROM hoa_don WHERE hoa_don_id=?";
+			PreparedStatement pstmDelete2 = conn.prepareStatement(deleteHH);
+			pstmDelete2.setString(1, idHoaDon);
+			pstmDelete2.executeUpdate();
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -29,6 +29,7 @@ public class AccountServlet extends HttpServlet {
 		request.setAttribute("dshdcht", dshdcht);
 		List<HoaDon> dshddht = UserUtils.QueryHoaDonDaHoanThanh(idKhachHang);
 		request.setAttribute("dshddht", dshddht);
+
 		RequestDispatcher dispatcher = this.getServletContext().
 				getRequestDispatcher("/WEB-INF/views/userInfoView.jsp");
 		dispatcher.forward(request, response);
@@ -39,8 +40,6 @@ public class AccountServlet extends HttpServlet {
 		String hoTen = request.getParameter("hoTen");
 		String sdt = request.getParameter("sdt");
 		String matKhau = request.getParameter("matKhau");
-		
-		System.out.println("AccountServlet.doPost");
 		
 		KhachHang kh = new KhachHang(id, hoTen, sdt, matKhau);
 		UserUtils.UpdateThongTinKhach(kh);
