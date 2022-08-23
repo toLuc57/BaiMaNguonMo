@@ -14,30 +14,37 @@
 <br/>
 <div class="responsive">
   <div class="gallery">
+  	<a target="_blank" href="${pageContext.request.contextPath}/images/Hinh5.jpg">
      <img src="${pageContext.request.contextPath}/images/Hinh5.jpg"
         alt="Trải nghiệm tuyệt vời" width="400" height="400">
-
+	</a>
     <div class="desc">Trải nghiệm tuyệt vời</div>
   </div>
 </div>
 <div class="responsive">
   <div class="gallery">
+  	<a target="_blank" href="${pageContext.request.contextPath}/images/Hinh2.jpg">
      <img src="${pageContext.request.contextPath}/images/Hinh2.jpg"
         alt="Nhân viên tư vấn tận tình" width="400" height="400">
+    </a>
     <div class="desc">Nhân viên tư vấn tận tình</div>
   </div>
 </div>
 <div class="responsive">
   <div class="gallery">
+    <a target="_blank" href="${pageContext.request.contextPath}/images/Hinh3.jpg">
      <img src="${pageContext.request.contextPath}/images/Hinh3.jpg"
         alt="Trải nghiệm cái đẹp" width="400" height="400">
+    </a>
     <div class="desc">Trải nghiệm cái đẹp</div>
   </div>
 </div>
 <div class="responsive">
   <div class="gallery">
+  	<a target="_blank" href="${pageContext.request.contextPath}/images/Hinh4.jpg">
      <img src="${pageContext.request.contextPath}/images/Hinh4.jpg"
         alt="Thỏa sức sáng tạo" width="400" height="400">
+ 	</a>
     <div class="desc">Thỏa sức sáng tạo</div>
   </div>
 </div>

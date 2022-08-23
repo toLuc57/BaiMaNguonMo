@@ -16,6 +16,7 @@ public class UserUtils {
 	
 	public static KhachHang QueryKhachHang(String dienThoai, String matKhau) {
 		Connection conn = null;
+		String newID = "";
 		try {
 			conn = MySQLConnUtils.getMySQLConUtils();
 			
@@ -41,10 +42,6 @@ public class UserUtils {
             }
             else {
             	String tenMacDinh = "User";
-            	if(matKhau == null)	{
-            		// default value
-            		matKhau = "123456";
-            	}
             	try {
         			String sql = "insert into khach_hang "
         					+ " (ho_ten, dien_thoai, mat_khau)"
@@ -55,12 +52,20 @@ public class UserUtils {
         			pstm1.setString(2, dienThoai);
         			pstm1.setString(3, matKhau);
         			pstm1.executeUpdate();
+        			
+        			String newIdQuery = "select khach_hang_id from khach_hang where dien_thoai=?";
+        			PreparedStatement pstm2 = conn.prepareStatement(newIdQuery);
+        			pstm2.setString(1, dienThoai);
+        			ResultSet rs2 = pstm2.executeQuery();
+        			if(rs2.next()) {
+        				newID = rs2.getString("khach_hang_id");
+        			}
         		}
         		catch(SQLException e) {
         			MySQLConnUtils.rollbackQuietly(conn); 
         			e.printStackTrace();
         		}
-            	return new KhachHang("",tenMacDinh,dienThoai, matKhau);
+            	return new KhachHang(newID,tenMacDinh,dienThoai, matKhau);
             }
         } catch (ClassNotFoundException | SQLException e) {
         	e.printStackTrace();
@@ -71,6 +76,7 @@ public class UserUtils {
 		}
 		return null;
 	}
+	
 	public static List<HoaDon> QueryHoaDonChuaHoanThanh(String idKhachHang){
 		Connection conn = null;
 		List<HoaDon> list = new ArrayList<HoaDon>();
@@ -173,8 +179,7 @@ public class UserUtils {
 			MySQLConnUtils.closeQuietly(conn);
 		}
 	}
-	// Chi dung voi HH chua hoan thanh
-	public static void DeleteHoaDon(String idHoaDon) {
+	private static void UpdateCaLamViec(String idHoaDon) {
 		Connection conn = null;
 		try {
 			// Tim kiem va cap nhat lai trang thai
@@ -214,6 +219,21 @@ public class UserUtils {
 				pstmUpdate.setString(3, ngayDat);
 				pstmUpdate.executeUpdate();
 			}
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			MySQLConnUtils.rollbackQuietly(conn);
+		} finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+	}
+	// Chi dung voi HH chua hoan thanh
+	public static void DeleteHoaDon(String idHoaDon) {
+		Connection conn = null;
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			UpdateCaLamViec(idHoaDon);
 			String deleteCTHH = "delete from chi_tiet_hoa_don"
 					+ " where hoa_don_id = ?";
 			PreparedStatement pstmDelete1 = conn.prepareStatement(deleteCTHH);
@@ -231,5 +251,75 @@ public class UserUtils {
 		} finally {
 			MySQLConnUtils.closeQuietly(conn);
 		}
+	}
+	public static void ChangeLich(String idhh, String ngayDat) {
+		Connection conn = null;
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			UpdateCaLamViec(idhh);
+			String updateHH = "UPDATE hoa_don"
+					+ " SET ngay_thuc_hien = ? "
+					+ "WHERE hoa_don_id = ?";
+			PreparedStatement pstm = conn.prepareStatement(updateHH);
+            pstm.setString(1, ngayDat);
+            pstm.setString(2, idhh);
+
+            pstm.executeUpdate();
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			MySQLConnUtils.rollbackQuietly(conn);
+		} finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		
+	}
+	public static KhachHang InsertKhachHang(KhachHang kh) {
+		Connection conn = null;
+		KhachHang newKH = null ;
+		String newID = "";
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select *from khach_hang where dien_thoai=?");
+            pstm.setString(1,kh.getDienThoai());
+            ResultSet rs = pstm.executeQuery();
+            if(rs.next()) {
+            	return null;
+            }
+            else {
+            	try {
+        			String sql = "insert into khach_hang "
+        					+ " (ho_ten, dien_thoai, mat_khau)"
+        					+ " values (?,?,?)" ;
+        			
+        			PreparedStatement pstm1 = conn.prepareStatement(sql);
+        			pstm1.setString(1, kh.getTen());
+        			pstm1.setString(2, kh.getDienThoai());
+        			pstm1.setString(3, kh.getMatKhau());
+        			pstm1.executeUpdate();
+        			
+        			String newIdQuery = "select khach_hang_id from khach_hang where dien_thoai=?";
+        			PreparedStatement pstm2 = conn.prepareStatement(newIdQuery);
+        			pstm2.setString(1, kh.getDienThoai());
+        			ResultSet rs2 = pstm2.executeQuery();
+        			if(rs2.next()) {
+        				newID = rs2.getString("khach_hang_id");
+        			}
+        			newKH = new KhachHang(newID,kh.getTen(),kh.getDienThoai(),kh.getMatKhau());
+        		}
+        		catch(SQLException e) {
+        			MySQLConnUtils.rollbackQuietly(conn); 
+        			e.printStackTrace();
+        		}
+            }
+		} catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        	MySQLConnUtils.rollbackQuietly(conn);
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return newKH;
 	}
 }

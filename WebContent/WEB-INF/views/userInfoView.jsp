@@ -47,7 +47,8 @@
 		      <th>Ngày đặt</th>
 		      <th>Ngày thực hiện</th>
 		      <th>Trạng thái</th> 
-		      <th>Chi tiết</th>  
+		      <th>Chi tiết</th>
+		      <th>Thay đổi</th>  
 		      <th>Hủy lịch</th>
 		   </tr>
 		   <c:forEach items ="${dshdcht}" var="hoaDon">
@@ -59,6 +60,10 @@
 		   		<td>${hoaDon.ngayThucHien}</td>
 		   		<td>${hoaDon.trangThai}</td>
 		   		<td><a href="chitiet?idhh=${hoaDon.id}">Chi Tiết Hóa Đơn</a></td>
+		   		<td>
+		   		  <a href="update?idhh=${hoaDon.id}&idnv=${hoaDon.idNhanVien}&order=${hoaDon.getChiHienThiNgay()}">
+		   		  Thay đổi
+		   		  </a>
 		   		<td><a href="xoa?idhh=${hoaDon.id}">Hủy lịch</a>
 		   	</tr>
 		   </c:forEach>

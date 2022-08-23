@@ -39,6 +39,7 @@ public class LoginedFilter implements Filter {
 		requiredPages.add("/BarberStore/account");
 		requiredPages.add("/BarberStore/order");
 		requiredPages.add("/BarberStore/chitiet");
+		requiredPages.add("/BarberStore/update");
 		if(loginedUser == null) {
 			if(requiredPages.contains(req.getRequestURI())) {
 				resp.sendRedirect(req.getContextPath() + "/");

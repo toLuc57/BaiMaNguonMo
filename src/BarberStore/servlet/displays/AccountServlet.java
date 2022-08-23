@@ -45,7 +45,7 @@ public class AccountServlet extends HttpServlet {
 		UserUtils.UpdateThongTinKhach(kh);
 		
 		MyUtils.storeLoginedUser(request.getSession(), kh);
-		response.sendRedirect(request.getContextPath() + "/");
+		response.sendRedirect(request.getContextPath() + "/account");
 	}
 
 }

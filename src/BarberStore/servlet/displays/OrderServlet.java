@@ -30,6 +30,8 @@ public class OrderServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		List<DichVu> dsdv = OrderUtils.QueryDichVu();
 		request.setAttribute("dsdv", dsdv);
 		List<String> dscn = OrderUtils.QueryChiNhanh();
@@ -83,6 +85,9 @@ public class OrderServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		String idKhachHang = request.getParameter("idKhachHang");
 		String ngayDat = request.getParameter("orderDate");
 		String idTiem = request.getParameter("store");

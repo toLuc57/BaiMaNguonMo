@@ -21,7 +21,8 @@ public class MySQLConnUtils {
 		ClassNotFoundException {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
+			String connectionURL = "jdbc:mysql://" + hostName +
+					":3306/" + dbName + "?useUnicode=true&characterEncoding=UTF-8";
 			
 			Connection conn = (Connection) DriverManager.getConnection(connectionURL,userName,password);
 		//	System.out.println("Suscessfully!");

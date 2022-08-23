@@ -323,7 +323,9 @@ public class OrderUtils {
 			pstm.setString(2, ngayDat);
 			pstm.setString(3, idNhanVien);
 			pstm.executeUpdate();
-			OrderUtils.InsertChiTietHoaDon(idKhachHang, ngayDat, idNhanVien,cacDichVu);
+			if(cacDichVu.length > 0) {
+				OrderUtils.InsertChiTietHoaDon(idKhachHang, ngayDat, idNhanVien,cacDichVu);
+			}
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -335,13 +337,68 @@ public class OrderUtils {
 	
 	public static void DatLich(String idKhachHang, String idNhanVien, 
 			String idKhungGio, String ngayDat, String[] cacDichVu, String idTiem) {
-		System.out.println(idKhachHang);
-		System.out.println(idNhanVien);
-		System.out.println(idKhungGio);
+		System.out.println("idKhachHang: " + idKhachHang);
+		System.out.println("idNhanVien " + idNhanVien);
+		System.out.println("idKhungGio " + idKhungGio);
 		System.out.println(ngayDat);
 		
 		OrderUtils.UpdateCaLamViec(idNhanVien, idKhungGio, ngayDat);
 		ngayDat = ngayDat + " " + mapGioBatDau.get(idKhungGio);
 		OrderUtils.InsertHoaDon(idKhachHang, ngayDat, idNhanVien, cacDichVu);
+	}
+	public static KhungGio QueryKhungGio(String idKhungGio) {
+		Connection conn = null;
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select * from khung_gio where khung_gio_id =?");
+            pstm.setString(1, idKhungGio);
+            ResultSet rs = pstm.executeQuery();
+            if(rs.next()) {
+            	String id = rs.getString("khung_gio_id");
+            	String batDau = rs.getString("bat_dau");
+            	String ketThuc = rs.getString("ket_thuc");
+            	
+            	KhungGio khungGio = new KhungGio(id,batDau,ketThuc);
+            	return khungGio;
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return null;
+	}
+	
+	public static List<CaLamViec> QueryCaLamViecCuaNhanVien(String idNhanVien, String ngayDat) {
+		Connection conn = null;
+		List<CaLamViec> list = new ArrayList<CaLamViec>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select *from ca_lam_viec "
+            		+ "where nhan_vien_id=? and ngay_lam_viec=? and trang_thai=0");
+            pstm.setString(1, idNhanVien);
+            pstm.setString(2, ngayDat);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String idNV = rs.getString("nhan_vien_id");
+            	String idKhungGio = rs.getString("khung_gio_id");
+            	String batDau = rs.getDate("ngay_lam_viec").toString();
+            	int trangThai = rs.getInt("trang_thai");
+            	
+            	CaLamViec caLamViec = new CaLamViec(idNV,idKhungGio,batDau,trangThai);
+            	list.add(caLamViec);
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return list;
 	}
 }

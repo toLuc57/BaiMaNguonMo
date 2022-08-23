@@ -65,4 +65,8 @@ public class HoaDon {
 	public void setNgayThucHien(String ngayThucHien) {
 		this.ngayThucHien = ngayThucHien;
 	}
+	public String getChiHienThiNgay() {
+		String[] date = ngayThucHien.split(" ");
+		return date[0];
+	}
 }

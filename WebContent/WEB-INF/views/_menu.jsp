@@ -96,6 +96,9 @@ ul.topnav li.right {float: right;}
   	<li class="right">
 	    <a href="javascript:void(0)" id="btnLogin">Đăng nhập</a>
 	  </li>
+	  <li class="right">
+	  	<a href="${pageContext.request.contextPath}/signup">Đăng ký</a>
+	  </li>
   </c:if>
 </ul>
 
