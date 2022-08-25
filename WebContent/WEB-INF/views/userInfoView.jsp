@@ -42,11 +42,12 @@
     	<table border="1">
 			<tr>
 			  <th>Mã đơn hàng</th>
-		      <th>Mã Khách Hàng</th>
+		      <th>Tên Khách Hàng</th>
 		      <th>Mã nhân viên</th>
 		      <th>Ngày đặt</th>
 		      <th>Ngày thực hiện</th>
 		      <th>Trạng thái</th> 
+		      <th>Tên nhân viên</th>
 		      <th>Chi tiết</th>
 		      <th>Thay đổi</th>  
 		      <th>Hủy lịch</th>
@@ -54,11 +55,12 @@
 		   <c:forEach items ="${dshdcht}" var="hoaDon">
 		   	<tr>
 		   		<td>${hoaDon.id}</td>
-		   		<td>${hoaDon.idKhachHang}</td>
+		   		<td>${loginedUser.ten}</td>
 		   		<td>${hoaDon.idNhanVien}</td>
 		   		<td>${hoaDon.ngayDat}</td>
 		   		<td>${hoaDon.ngayThucHien}</td>
 		   		<td>${hoaDon.trangThai}</td>
+		   		<td>${dsnv.get(hoaDon.idNhanVien).hoTen }</td>
 		   		<td><a href="chitiet?idhh=${hoaDon.id}">Chi Tiết Hóa Đơn</a></td>
 		   		<td>
 		   		  <a href="update?idhh=${hoaDon.id}&idnv=${hoaDon.idNhanVien}&order=${hoaDon.getChiHienThiNgay()}">

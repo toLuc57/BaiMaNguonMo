@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import BarberStore.beans.ChiTietHoaDon;
 import BarberStore.beans.HoaDon;
 import BarberStore.beans.KhachHang;
+import BarberStore.beans.NhanVien;
 import BarberStore.jdbc.MySQLConnUtils;
 
 public class UserUtils {
@@ -321,5 +324,36 @@ public class UserUtils {
 			MySQLConnUtils.closeQuietly(conn);
 		}
 		return newKH;
+	}
+	public static Map<String,NhanVien> QueryNhanVien(){
+		Connection conn = null;
+		Map <String,NhanVien> map = new HashMap<String,NhanVien>();
+		try {
+			conn = MySQLConnUtils.getMySQLConUtils();
+			
+            PreparedStatement pstm = conn.prepareStatement("select *from nhan_vien");
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+            	String idNhanVien = rs.getString("nhan_vien_id");
+            	String hoTen = rs.getString("ho_ten");
+            	String dienThoai = rs.getString("dien_thoai");
+            	String cmnd = rs.getString("CMND");
+            	String trangThai = rs.getString("trang_thai");
+            	String idTiemHang = rs.getString("tiem_id");
+            	String idTruongCa = rs.getString("truong_ca_id");
+            	
+            	NhanVien caLamViec = new NhanVien(idNhanVien, hoTen, dienThoai,
+            			cmnd, trangThai, idTiemHang, idTruongCa);
+            	map.put(idNhanVien, caLamViec);
+            	
+            }
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+        	e.printStackTrace();
+        }
+		finally {
+			MySQLConnUtils.closeQuietly(conn);
+		}
+		return map;
 	}
 }

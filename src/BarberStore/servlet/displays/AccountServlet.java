@@ -2,6 +2,7 @@ package BarberStore.servlet.displays;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import BarberStore.beans.HoaDon;
 import BarberStore.beans.KhachHang;
+import BarberStore.beans.NhanVien;
 import BarberStore.utils.MyUtils;
 import BarberStore.utils.UserUtils;
 
@@ -29,7 +31,9 @@ public class AccountServlet extends HttpServlet {
 		request.setAttribute("dshdcht", dshdcht);
 		List<HoaDon> dshddht = UserUtils.QueryHoaDonDaHoanThanh(idKhachHang);
 		request.setAttribute("dshddht", dshddht);
-
+		Map<String, NhanVien> dsnv = UserUtils.QueryNhanVien();
+		request.setAttribute("dsnv", dsnv);
+		
 		RequestDispatcher dispatcher = this.getServletContext().
 				getRequestDispatcher("/WEB-INF/views/userInfoView.jsp");
 		dispatcher.forward(request, response);
