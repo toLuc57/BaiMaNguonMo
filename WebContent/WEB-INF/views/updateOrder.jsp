@@ -40,8 +40,5 @@
             </tr>
       	</table>
       </form>	
-<script>
-document.getElementById('orderDate').valueAsDate = new Date();
-</script>
 </body>
 </html>
