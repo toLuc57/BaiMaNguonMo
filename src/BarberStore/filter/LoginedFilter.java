@@ -59,10 +59,7 @@ public class LoginedFilter implements Filter {
 					KhachHang kh = UserUtils.QueryKhachHang(sdt, mk);
 					if(kh == null) {
 						MyUtils.deleteLoginedUser(req.getSession());
-						request.setAttribute("ttdn","Fail");
-					}
-					else {
-						request.setAttribute("ttdn", null);
+						resp.sendRedirect(req.getContextPath() + "/");
 					}
 					MyUtils.storeLoginedUser(req.getSession(), kh);
 				}

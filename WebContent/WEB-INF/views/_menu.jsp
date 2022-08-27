@@ -105,7 +105,6 @@ ul.topnav li.right {float: right;}
 <div id="myModal" class="modal">
   <span class="close">&times;</span>
   <div class="modal-content" id="modalLogin">
-    <input type="hidden" value="${ttdn}" id="ttdn">
     <p style="font-size: 20px; text-align:center;">Đăng nhập</p>
     <form method="POST" action="${pageContext.request.contextPath}/">
       <table >
@@ -128,11 +127,6 @@ ul.topnav li.right {float: right;}
   </div>
 </div>
 <script type="text/javascript">
-var ttdn = document.getElementById('ttdn');
-if(ttdn.value == "Fail"){
-	window.alert("Đăng nhập thất bại");
-}
-	
 var modal= document.getElementById('myModal');
 
 var btnLogin = document.getElementById('btnLogin');
